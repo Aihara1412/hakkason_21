@@ -10,14 +10,14 @@ import (
 	"net/http"
 )
 
-//構造体Userの宣言
-type User struct{
+//構造体Imageの宣言
+type Image struct{
 	ID	uint	`json:"ID"`
-	title	string	`json:"title"`
-	description string	`json:"description"`
-	filepath	string	`json:"filepath"`
-	tags	string	`json:"tags"`
-	created_at	time.Time	`json:"created_at"`
+	Title	string	`json:"title"`
+	Description string	`json:"description"`
+	Filepath	string	`json:"filepath"`
+	Tags	string	`json:"tags"`
+	Created_at	time.Time	`json:"created_at"`
 }
 
 var db *gorm.DB
@@ -39,14 +39,14 @@ func main(){
 }
 
 func posting(c*gin.Context){
-	var user User
+	var img Image
 	//構造に合わなければエラー返す
-	if err := c.BindJSON(&user); err != nil {
+	if err := c.BindJSON(&img); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
 	//挿入
-	result := db.Create(&user) // pass pointer of data to Create
+	result := db.Create(&img) // pass pointer of data to Create
 	//できなければエラー返す
 	if result.Error != nil{
 		c.JSON(500,gin.H{"error":result.Error.Error()})
