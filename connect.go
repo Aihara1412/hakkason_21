@@ -13,10 +13,7 @@ import (
 //構造体Imageの宣言
 type Image struct{
 	ID	uint	`json:"ID"`
-	Title	string	`json:"title"`
-	Description string	`json:"description"`
 	Filepath	string	`json:"filepath"`
-	Tags	string	`json:"tags"`
 	Created_at	time.Time	`json:"created_at"`
 }
 
@@ -25,8 +22,8 @@ var db *gorm.DB
 func main(){
 	var err error
 	// github.com/mattn/go-sqlite3
-	//SQLiteを開く　※PATHはあとで設定
-	db, err := gorm.Open(sqlite.Open("PATH"), &gorm.Config{})
+	//SQLiteを開く
+	db, err := gorm.Open(sqlite.Open("photos.db"), &gorm.Config{})
 	//つながらないとエラー返す
 	if err != nil {
 		panic("failed to connect to database")
