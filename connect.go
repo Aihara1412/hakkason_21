@@ -1,18 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"time"
   	"gorm.io/driver/sqlite" // Sqlite driver based on CGO
   	// "github.com/glebarez/sqlite" // Pure go SQLite driver, checkout https://github.com/glebarez/sqlite for details
   	"gorm.io/gorm"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
-//構造体Imageの宣言
-type Image struct{
-	ID	uint	`json:"ID"`
+//構造体Photoの宣言
+type Photo struct{
+	ID	uint	`json:"id"`
 	Filepath	string	`json:"filepath"`
 	Created_at	time.Time	`json:"created_at"`
 }
@@ -20,14 +18,6 @@ type Image struct{
 var db *gorm.DB
 
 func main(){
-	var err error
-	// github.com/mattn/go-sqlite3
-	//SQLiteを開く
-	db, err := gorm.Open(sqlite.Open("photos.db"), &gorm.Config{})
-	//つながらないとエラー返す
-	if err != nil {
-		panic("failed to connect to database")
-	}
 
 	//POSTを受け取る
 	router:=gin.Default()
@@ -36,12 +26,21 @@ func main(){
 }
 
 func posting(c*gin.Context){
-	var img Image
+	var err error
+	// github.com/mattn/go-sqlite3
+	//SQLiteを開く
+	db, err := gorm.Open(sqlite.Open("photos.db"), &gorm.Config{})
+	//つながらないとエラー返す
+	if err != nil {
+		panic("failed to connect to database")
+	}
+	var img Photo
 	//構造に合わなければエラー返す
 	if err := c.BindJSON(&img); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+	img.Created_at=time.Now()
 	//挿入
 	result := db.Create(&img) // pass pointer of data to Create
 	//できなければエラー返す
