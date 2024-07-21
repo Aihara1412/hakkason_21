@@ -18,7 +18,6 @@ type Photo struct{
 var db *gorm.DB
 
 func main(){
-
 	//POSTを受け取る
 	router:=gin.Default()
 	router.POST("/somePost",posting)
